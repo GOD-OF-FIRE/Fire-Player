@@ -28,9 +28,9 @@ const MusicPlayer = ({ songs }) => {
   
     const audioElement = document.querySelector("audio");
     if (isPlaying) {
-      audioElement.pause(); // Pause the audio if currently playing
+      audioElement.pause();
     } else {
-      audioElement.play(); // Play the audio if currently paused
+      audioElement.play(); 
     }
   };
   
