@@ -25,19 +25,19 @@ const MusicPlayer = ({ songs }) => {
 
   const playPauseHandler = () => {
     setIsPlaying(!isPlaying);
-  
+
     const audioElement = document.querySelector("audio");
     if (isPlaying) {
       audioElement.pause();
     } else {
-      audioElement.play(); 
+      audioElement.play();
     }
   };
-  
+
   const nextSongHandler = () => {
     const newIndex = (currentSongIndex + 1) % songs.length;
     setCurrentSongIndex(newIndex);
-  
+
     const audioElement = document.querySelector("audio");
     audioElement.currentTime = 0; // Reset the current time to the beginning of the audio
     audioElement.play(); // Play the next song
@@ -64,13 +64,13 @@ const MusicPlayer = ({ songs }) => {
           maxWidth: "100%",
           height: "auto",
         });
-      } else if(window.innerWidth <= 1000) {
+      } else if (window.innerWidth <= 1000) {
         setImageStyle({
           width: "50%",
           maxWidth: "100%",
           height: "auto",
         });
-      }else {
+      } else {
         setImageStyle({
           width: "26%",
           maxWidth: "50%",
@@ -95,6 +95,7 @@ const MusicPlayer = ({ songs }) => {
           width: "100%",
           minHeight: "8vh",
           cursor: "pointer",
+          padding: "8px",
         }}
         onClick={toggleDrawer}
       >
