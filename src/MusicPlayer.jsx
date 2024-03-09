@@ -11,6 +11,7 @@ const MusicPlayer = ({ songs }) => {
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
   };
+  console.log("songs",songs )
 
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
