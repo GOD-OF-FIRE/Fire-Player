@@ -64,7 +64,13 @@ const MusicPlayer = ({ songs }) => {
           maxWidth: "100%",
           height: "auto",
         });
-      } else {
+      } else if(window.innerWidth <= 1000) {
+        setImageStyle({
+          width: "50%",
+          maxWidth: "100%",
+          height: "auto",
+        });
+      }else {
         setImageStyle({
           width: "26%",
           maxWidth: "50%",
