@@ -5,6 +5,7 @@ import { Slider, IconButton, Typography } from "@mui/material";
 import { PlayArrow, Pause, SkipPrevious, SkipNext } from "@mui/icons-material";
 
 const MusicPlayer = ({ songs }) => {
+  console.log("songs", songs);
   const [isOpen, setIsOpen] = useState(false);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -15,6 +16,11 @@ const MusicPlayer = ({ songs }) => {
     width: "26%", // Adjust image size for non-mobile devices
     height: "auto",
     maxWidth: "50%",
+  });
+  const [imgStyle, setImgStyle] = useState({
+    width: "40%", // Adjust image size for non-mobile devices
+    height: "auto",
+    maxWidth: "40%",
   });
 
   const toggleDrawer = () => {
@@ -85,9 +91,19 @@ const MusicPlayer = ({ songs }) => {
           maxWidth: "100%",
           height: "auto",
         });
+        setImgStyle({
+          width: "110%",
+          maxWidth: "110%",
+          height: "auto",
+        });
       } else if (window.innerWidth <= 1000) {
         setImageStyle({
           width: "50%",
+          maxWidth: "100%",
+          height: "auto",
+        });
+        setImgStyle({
+          width: "100%",
           maxWidth: "100%",
           height: "auto",
         });
@@ -95,6 +111,11 @@ const MusicPlayer = ({ songs }) => {
         setImageStyle({
           width: "26%",
           maxWidth: "50%",
+          height: "auto",
+        });
+        setImgStyle({
+          width: "40%",
+          maxWidth: "40%",
           height: "auto",
         });
       }
@@ -139,10 +160,22 @@ const MusicPlayer = ({ songs }) => {
           minHeight: "8vh",
           cursor: "pointer",
           padding: "8px",
+          display: "flex",
+          gap: "12px",
         }}
         onClick={toggleDrawer}
       >
-        Music Player
+        <div style={{ width: "10%" }}>
+          <img
+            src={songs[currentSongIndex].image}
+            alt="song image"
+            style={imgStyle}
+          />
+        </div>
+        <div style={{ width: "90%" }}>
+          <Typography>Song: {songs[currentSongIndex].name}</Typography>
+          <Typography>Artist: {songs[currentSongIndex].artist}</Typography>
+        </div>
       </div>
       <Drawer
         anchor="bottom"
@@ -213,7 +246,7 @@ const MusicPlayer = ({ songs }) => {
                 alignItems: "center",
               }}
             >
-              <Typography variant="h4" sx={{color:"#fff"}}>
+              <Typography variant="h4" sx={{ color: "#fff" }}>
                 {songs[currentSongIndex].name}
               </Typography>
               <audio
