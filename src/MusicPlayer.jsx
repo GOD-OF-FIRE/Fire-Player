@@ -5,7 +5,6 @@ import { Slider, IconButton, Typography } from "@mui/material";
 import { PlayArrow, Pause, SkipPrevious, SkipNext } from "@mui/icons-material";
 
 const MusicPlayer = ({ songs }) => {
-  console.log("songs", songs);
   const [isOpen, setIsOpen] = useState(false);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -16,6 +15,8 @@ const MusicPlayer = ({ songs }) => {
     width: "26%", // Adjust image size for non-mobile devices
     height: "auto",
     maxWidth: "50%",
+    borderRadius: "20px",
+    boxShadow:"0 0 10px black"
   });
   const [imgStyle, setImgStyle] = useState({
     width: "40%", // Adjust image size for non-mobile devices
@@ -90,6 +91,8 @@ const MusicPlayer = ({ songs }) => {
           width: "100%",
           maxWidth: "100%",
           height: "auto",
+          borderRadius: "20px",
+          boxShadow:"0 0 10px black"
         });
         setImgStyle({
           width: "110%",
@@ -101,6 +104,8 @@ const MusicPlayer = ({ songs }) => {
           width: "50%",
           maxWidth: "100%",
           height: "auto",
+          borderRadius: "20px",
+          boxShadow:"0 0 10px black"
         });
         setImgStyle({
           width: "100%",
@@ -112,6 +117,8 @@ const MusicPlayer = ({ songs }) => {
           width: "26%",
           maxWidth: "50%",
           height: "auto",
+          borderRadius: "20px",
+          boxShadow:"0 0 10px black"
         });
         setImgStyle({
           width: "40%",
@@ -148,6 +155,15 @@ const MusicPlayer = ({ songs }) => {
     // When a new song is selected, update the duration of the song
     setDuration(audioRef?.current?.duration);
   }, [currentSongIndex]);
+  function convertSecond(seconds) {
+    var minutes = Math.floor(seconds / 60);
+    var remainingSeconds = seconds % 60;
+    return (
+      minutes.toString().padStart(2, "0") +
+      ":" +
+      remainingSeconds.toFixed(2).padStart(5, "0")
+    );
+  }
 
   return (
     <>
@@ -238,6 +254,20 @@ const MusicPlayer = ({ songs }) => {
                 min={0}
                 max={duration} // Set max value to duration
               />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                gap: "5rem",
+              }}
+            >
+              <Typography variant="caption" sx={{ color: "#fff" }}>
+                {convertSecond(progress)}
+              </Typography>
+              <Typography variant="caption" sx={{ color: "#fff" }}>
+                {convertSecond(duration)}
+              </Typography>
             </div>
             <div
               style={{
