@@ -45,6 +45,13 @@ const MusicPlayer = ({ songs }) => {
 
   useEffect(() => {
     const audioElement = audioRef.current;
+    if (audioElement && isFinite(audioElement.duration)) {
+      audioElement.currentTime = (progress * audioElement.duration) / 100;
+    }
+  }, [progress, songs[currentSongIndex].song]); // Add songs[currentSongIndex].song to dependencies
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
     if (audioElement) {
       if (isPlaying) {
         audioElement.play();
@@ -53,13 +60,6 @@ const MusicPlayer = ({ songs }) => {
       }
     }
   }, [isPlaying]);
-
-  useEffect(() => {
-    const audioElement = audioRef.current;
-    if (audioElement) {
-      audioElement.currentTime = (progress * audioElement.duration) / 100;
-    }
-  }, [progress]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -157,7 +157,7 @@ const MusicPlayer = ({ songs }) => {
               />
             </div>
           </div>
-          <div className="player" style={{ marginTop: "auto", zIndex: 15, }}>
+          <div className="player" style={{ marginTop: "auto", zIndex: 15 }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Slider
                 sx={{ margin: "12px", width: "80%", color: "#fff" }} // Set color attribute to change slider color
