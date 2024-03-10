@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import "./MusicPlayer.css";
 import { Button, Slider } from "@mui/material";
@@ -7,55 +7,59 @@ import { PlayArrow, Pause, SkipPrevious, SkipNext } from "@mui/icons-material";
 
 const MusicPlayer = ({ songs }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsOpen(!isOpen);
-  };
-  console.log("songs",songs )
-
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const audioRef = useRef(null);
   const [imageStyle, setImageStyle] = useState({
     width: "26%", // Adjust image size for non-mobile devices
     height: "auto",
     maxWidth: "50%",
   });
 
-  const currentSong = songs[currentSongIndex];
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+  };
 
   const playPauseHandler = () => {
     setIsPlaying(!isPlaying);
-
-    const audioElement = document.querySelector("audio");
-    if (isPlaying) {
-      audioElement.pause();
-    } else {
-      audioElement.play();
-    }
   };
 
   const nextSongHandler = () => {
     const newIndex = (currentSongIndex + 1) % songs.length;
     setCurrentSongIndex(newIndex);
-
-    const audioElement = document.querySelector("audio");
-    audioElement.currentTime = 0; // Reset the current time to the beginning of the audio
-    audioElement.play(); // Play the next song
+    setProgress(0); // Reset progress when changing songs
+    setIsPlaying(true); // Start playing next song automatically
   };
 
   const prevSongHandler = () => {
     const newIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     setCurrentSongIndex(newIndex);
-    // Add logic to play previous song
+    setProgress(0); // Reset progress when changing songs
+    setIsPlaying(true); // Start playing previous song automatically
   };
 
   const seekHandler = (event, newValue) => {
-    const newTime = (newValue * currentSong.duration) / 100;
     setProgress(newValue);
-    const audioElement = document.querySelector("audio");
-    audioElement.currentTime = newTime;
   };
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      if (isPlaying) {
+        audioElement.play();
+      } else {
+        audioElement.pause();
+      }
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.currentTime = (progress * audioElement.duration) / 100;
+    }
+  }, [progress]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -110,26 +114,50 @@ const MusicPlayer = ({ songs }) => {
       >
         <div
           className="content"
-          style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+          }}
         >
+          <div
+            className="background"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 0,
+              backgroundImage: `url(${songs[currentSongIndex].image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              filter: "blur(10px)",
+            }}
+          />
           <div
             style={{
               width: "100%",
               height: "60vh",
               display: "flex",
-              justifyContent: "cenrter",
+              justifyContent: "center",
               alignItems: "center",
+              zIndex: 10,
             }}
           >
-            <div className="image">
+            <div
+              className="image"
+              style={{ display: "flex", justifyContent: "center", zIndex: 12 }}
+            >
               <img
-                src="https://assetscdn1.paytm.com/images/cinema/Fighter--705x750-0fec4d00-b782-11ee-9ee5-7d491b016e7d.jpg"
+                src={songs[currentSongIndex].image}
                 alt="song image"
                 style={imageStyle}
               />
             </div>
           </div>
-          <div className="player" style={{ marginTop: "auto" }}>
+          <div className="player" style={{ marginTop: "auto", zIndex: 15, }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Slider
                 sx={{ margin: "12px", width: "80%", color: "#fff" }} // Set color attribute to change slider color
@@ -137,14 +165,14 @@ const MusicPlayer = ({ songs }) => {
                 onChange={seekHandler}
                 aria-labelledby="continuous-slider"
                 min={0}
-                max={currentSong.duration}
+                max={100}
               />
             </div>
             <div>
-              <h2>{currentSong.title}</h2>
+              <h2>{songs[currentSongIndex].name}</h2>
               <audio
-                style={{ display: "none" }}
-                src={currentSong.url}
+                ref={audioRef}
+                src={songs[currentSongIndex].song}
                 autoPlay={isPlaying}
               ></audio>
             </div>

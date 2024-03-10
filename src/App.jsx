@@ -39,11 +39,19 @@ const App = () => {
         }
 
         const data = await response.json();
-        setTracks(data.items.map(item => ({
+        
+        // Filter tracks with preview URLs
+        const filteredTracks = data.items.filter(item => item.track.preview_url !== null);
+        
+        // Map the filtered tracks to required format
+        const formattedTracks = filteredTracks.map(item => ({
           name: item.track.name,
           artist: item.track.artists.map(artist => artist.name).join(', '),
-          image: item.track.album.images[0].url
-        })));
+          image: item.track.album.images[0].url,
+          song:item.track.preview_url
+        }));
+        
+        setTracks(formattedTracks);
         setLoading(false);
       } catch (error) {
         setError(error.message);
