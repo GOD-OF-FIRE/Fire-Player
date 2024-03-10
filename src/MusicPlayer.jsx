@@ -69,7 +69,7 @@ const MusicPlayer = ({ songs }) => {
       if (audioRef.current) {
         const currentTime = audioRef.current.currentTime;
         setProgress(currentTime);
-        if (currentTime === duration) {
+        if (currentTime >= duration - 0.1) {
           nextSongHandler();
         }
       }
