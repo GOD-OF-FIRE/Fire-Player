@@ -3,6 +3,7 @@ import Drawer from "@mui/material/Drawer";
 import "./MusicPlayer.css";
 import { Slider, IconButton, Typography } from "@mui/material";
 import { PlayArrow, Pause, SkipPrevious, SkipNext } from "@mui/icons-material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const MusicPlayer = ({ songs }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,7 @@ const MusicPlayer = ({ songs }) => {
     height: "auto",
     maxWidth: "50%",
     borderRadius: "20px",
-    boxShadow:"0 0 10px black"
+    boxShadow: "0 0 10px black",
   });
   const [imgStyle, setImgStyle] = useState({
     width: "40%", // Adjust image size for non-mobile devices
@@ -92,7 +93,7 @@ const MusicPlayer = ({ songs }) => {
           maxWidth: "100%",
           height: "auto",
           borderRadius: "20px",
-          boxShadow:"0 0 10px black"
+          boxShadow: "0 0 10px black",
         });
         setImgStyle({
           width: "110%",
@@ -105,7 +106,7 @@ const MusicPlayer = ({ songs }) => {
           maxWidth: "100%",
           height: "auto",
           borderRadius: "20px",
-          boxShadow:"0 0 10px black"
+          boxShadow: "0 0 10px black",
         });
         setImgStyle({
           width: "100%",
@@ -118,7 +119,7 @@ const MusicPlayer = ({ songs }) => {
           maxWidth: "50%",
           height: "auto",
           borderRadius: "20px",
-          boxShadow:"0 0 10px black"
+          boxShadow: "0 0 10px black",
         });
         setImgStyle({
           width: "40%",
@@ -199,6 +200,11 @@ const MusicPlayer = ({ songs }) => {
         onClose={toggleDrawer}
         PaperProps={{ style: { borderRadius: "20px 20px 0 0" } }}
       >
+        <div style={{display:"flex",justifyContent:"center",margin:"0px",padding:"0px",cursor:"ponter"}} onClick={toggleDrawer}>
+          <IconButton sx={{margin:"0px",padding:"0px"}}>
+            <ArrowDropDownIcon sx={{fontSize:"40px"}}/>
+          </IconButton>
+        </div>
         <div
           className="content"
           style={{
