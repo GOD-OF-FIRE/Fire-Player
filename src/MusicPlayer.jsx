@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import "./MusicPlayer.css";
-import { Slider, IconButton } from "@mui/material";
+import { Slider, IconButton, Typography } from "@mui/material";
 import { PlayArrow, Pause, SkipPrevious, SkipNext } from "@mui/icons-material";
 
 const MusicPlayer = ({ songs }) => {
@@ -39,6 +39,13 @@ const MusicPlayer = ({ songs }) => {
     setIsPlaying(true); // Start playing previous song automatically
   };
 
+  const seekHandler = (event, newValue) => {
+    setProgress(newValue);
+    if (audioRef.current) {
+      audioRef.current.currentTime = newValue;
+    }
+  };
+
   useEffect(() => {
     const audioElement = audioRef.current;
     if (audioElement) {
@@ -55,6 +62,9 @@ const MusicPlayer = ({ songs }) => {
       if (audioRef.current) {
         const currentTime = audioRef.current.currentTime;
         setProgress(currentTime);
+        if (currentTime === duration) {
+          nextSongHandler();
+        }
       }
     };
 
@@ -66,13 +76,7 @@ const MusicPlayer = ({ songs }) => {
       };
     }
   }, [duration]);
-  const seekHandler = (event, newValue) => {
-    console.log("newValue", newValue);
-    setProgress(newValue);
-    if (audioRef.current) {
-      audioRef.current.currentTime = newValue;
-    }
-  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 600) {
@@ -123,9 +127,7 @@ const MusicPlayer = ({ songs }) => {
     // When a new song is selected, update the duration of the song
     setDuration(audioRef?.current?.duration);
   }, [currentSongIndex]);
-  console.log("duraion", audioRef.current?.duration);
-  console.log("duraionState", duration);
-  console.log("currenttime", audioRef.current?.currentTime);
+
   return (
     <>
       <div
@@ -204,8 +206,16 @@ const MusicPlayer = ({ songs }) => {
                 max={duration} // Set max value to duration
               />
             </div>
-            <div>
-              <h2>{songs[currentSongIndex].name}</h2>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4" sx={{color:"#fff"}}>
+                {songs[currentSongIndex].name}
+              </Typography>
               <audio
                 ref={audioRef}
                 src={songs[currentSongIndex].song}
