@@ -4,6 +4,7 @@ import "./MusicPlayer.css";
 import { Slider, IconButton, Typography } from "@mui/material";
 import { PlayArrow, Pause, SkipPrevious, SkipNext } from "@mui/icons-material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { VolumeDown, VolumeUp } from "@mui/icons-material";
 
 const MusicPlayer = ({ songs }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const MusicPlayer = ({ songs }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.5); // Initial volume
   const audioRef = useRef(null);
   const [imageStyle, setImageStyle] = useState({
     width: "26%", // Adjust image size for non-mobile devices
@@ -51,6 +53,14 @@ const MusicPlayer = ({ songs }) => {
     setProgress(newValue);
     if (audioRef.current) {
       audioRef.current.currentTime = newValue;
+    }
+  };
+
+  const volumeChangeHandler = (event, newValue) => {
+    const newVolume = parseFloat(newValue.toFixed(2)); // Limiting to two decimal places
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
     }
   };
 
@@ -156,6 +166,7 @@ const MusicPlayer = ({ songs }) => {
     // When a new song is selected, update the duration of the song
     setDuration(audioRef?.current?.duration);
   }, [currentSongIndex]);
+
   function convertSecond(seconds) {
     var minutes = Math.floor(seconds / 60);
     var remainingSeconds = seconds % 60;
@@ -200,9 +211,18 @@ const MusicPlayer = ({ songs }) => {
         onClose={toggleDrawer}
         PaperProps={{ style: { borderRadius: "20px 20px 0 0" } }}
       >
-        <div style={{display:"flex",justifyContent:"center",margin:"0px",padding:"0px",cursor:"ponter"}} onClick={toggleDrawer}>
-          <IconButton sx={{margin:"0px",padding:"0px"}}>
-            <ArrowDropDownIcon sx={{fontSize:"40px"}}/>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "0px",
+            padding: "0px",
+            cursor: "pointer",
+          }}
+          onClick={toggleDrawer}
+        >
+          <IconButton sx={{ margin: "0px", padding: "0px" }}>
+            <ArrowDropDownIcon sx={{ fontSize: "40px" }} />
           </IconButton>
         </div>
         <div
@@ -318,6 +338,28 @@ const MusicPlayer = ({ songs }) => {
               >
                 <SkipNext />
               </IconButton>
+            </div>
+            <div
+              className="volume"
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "-5rem",
+                paddingRight: "1rem",
+                alignItems: "center",
+              }}
+            >
+              <VolumeDown sx={{ color: "#fff" }} />
+              <Slider
+                sx={{ margin: "12px", width: "7rem", color: "#fff" }}
+                value={volume}
+                onChange={volumeChangeHandler}
+                aria-labelledby="continuous-slider"
+                min={0}
+                max={1}
+                step={0.01}
+              />
+              <VolumeUp sx={{ color: "#fff" }} />
             </div>
           </div>
         </div>
