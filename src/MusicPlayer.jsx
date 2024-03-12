@@ -12,17 +12,18 @@ const MusicPlayer = ({ songs }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.5); // Initial volume
+  const [volume, setVolume] = useState(0.5); 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const audioRef = useRef(null);
   const [imageStyle, setImageStyle] = useState({
-    width: "26%", // Adjust image size for non-mobile devices
+    width: "26%", 
     height: "auto",
     maxWidth: "50%",
     borderRadius: "20px",
     boxShadow: "0 0 10px black",
   });
   const [imgStyle, setImgStyle] = useState({
-    width: "40%", // Adjust image size for non-mobile devices
+    width: "40%", 
     height: "auto",
     maxWidth: "40%",
   });
@@ -38,15 +39,15 @@ const MusicPlayer = ({ songs }) => {
   const nextSongHandler = () => {
     const newIndex = (currentSongIndex + 1) % songs.length;
     setCurrentSongIndex(newIndex);
-    setProgress(0); // Reset progress when changing songs
-    setIsPlaying(true); // Start playing next song automatically
+    setProgress(0);
+    setIsPlaying(true); 
   };
 
   const prevSongHandler = () => {
     const newIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     setCurrentSongIndex(newIndex);
-    setProgress(0); // Reset progress when changing songs
-    setIsPlaying(true); // Start playing previous song automatically
+    setProgress(0); 
+    setIsPlaying(true); 
   };
 
   const seekHandler = (event, newValue) => {
@@ -57,7 +58,7 @@ const MusicPlayer = ({ songs }) => {
   };
 
   const volumeChangeHandler = (event, newValue) => {
-    const newVolume = parseFloat(newValue.toFixed(2)); // Limiting to two decimal places
+    const newVolume = parseFloat(newValue.toFixed(2)); 
     setVolume(newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
@@ -98,6 +99,7 @@ const MusicPlayer = ({ songs }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 600) {
+        setWindowWidth(window.innerWidth);
         setImageStyle({
           width: "100%",
           maxWidth: "100%",
@@ -111,6 +113,7 @@ const MusicPlayer = ({ songs }) => {
           height: "auto",
         });
       } else if (window.innerWidth <= 1000) {
+        setWindowWidth(window.innerWidth);
         setImageStyle({
           width: "50%",
           maxWidth: "100%",
@@ -124,6 +127,7 @@ const MusicPlayer = ({ songs }) => {
           height: "auto",
         });
       } else {
+        setWindowWidth(window.innerWidth);
         setImageStyle({
           width: "26%",
           maxWidth: "50%",
@@ -158,12 +162,10 @@ const MusicPlayer = ({ songs }) => {
   }, [isPlaying, duration]);
 
   useEffect(() => {
-    // When a new song is selected, set the progress to 0
     setProgress(0);
   }, [currentSongIndex]);
 
   useEffect(() => {
-    // When a new song is selected, update the duration of the song
     setDuration(audioRef?.current?.duration);
   }, [currentSongIndex]);
 
@@ -278,7 +280,7 @@ const MusicPlayer = ({ songs }) => {
                 onChange={seekHandler}
                 aria-labelledby="continuous-slider"
                 min={0}
-                max={duration} // Set max value to duration
+                max={duration} 
               />
             </div>
             <div
@@ -339,28 +341,30 @@ const MusicPlayer = ({ songs }) => {
                 <SkipNext />
               </IconButton>
             </div>
-            <div
-              className="volume"
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "-5rem",
-                paddingRight: "1rem",
-                alignItems: "center",
-              }}
-            >
-              <VolumeDown sx={{ color: "#fff" }} />
-              <Slider
-                sx={{ margin: "12px", width: "7rem", color: "#fff" }}
-                value={volume}
-                onChange={volumeChangeHandler}
-                aria-labelledby="continuous-slider"
-                min={0}
-                max={1}
-                step={0.01}
-              />
-              <VolumeUp sx={{ color: "#fff" }} />
-            </div>
+            {windowWidth > 600 && (
+              <div
+                className="volume"
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "-5rem",
+                  paddingRight: "1rem",
+                  alignItems: "center",
+                }}
+              >
+                <VolumeDown sx={{ color: "#fff" }} />
+                <Slider
+                  sx={{ margin: "12px", width: "7rem", color: "#fff" }}
+                  value={volume}
+                  onChange={volumeChangeHandler}
+                  aria-labelledby="continuous-slider"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                />
+                <VolumeUp sx={{ color: "#fff" }} />
+              </div>
+            )}
           </div>
         </div>
       </Drawer>
